@@ -1,4 +1,4 @@
-function [B,w]=Twopass(F)
+function [B,w]=Twopass(F,i,j)
 %-------------------------------
 % Input:
 % F, a 50*50*20*10 matrix with initialized number
@@ -6,7 +6,9 @@ function [B,w]=Twopass(F)
 % Output:
 % B, a 50*50*20*10 matrix, the minimized generalized distance value 
 % at each location of its parent
-% w, a 50*50*20*10 matrix, the best location of wj given wi. 
+% w, a 50*50*20*10 matrix, the best location of wj given wi.
+% i, the index of the current node
+% j, the index of the parent of the current node
 %
 % Attention: 
 % each entry of w is a number instead of a vector of

@@ -36,16 +36,17 @@ for d=dmax:-1:0
     for idx=1:length(node_d)
       node=node_d(idx);
       child=find(tree(node,:)~=0);
+      parent=find(tree(:,node)~=0);
       F{node}=Initialize(I,node,seq,B,child);
       if d ~=0
-        [B{node},w_opt_table{node}]=Twopass(F{node});
+        [B{node},w_opt_table{node}]=Twopass(F{node},node,parent);
       else
           a=min(min(min(min(F{1}))));
           [m,n,p,q]=size(F{1});
           k=find(F{1}==a);
           w_opt{node}=k;
           temp=trans(k,m,n,p,q);
-          l_opt{node}=Tinv(temp); % every entry of temp is a integer, do not forget scale in Tinv
+          l_opt{node}=Tinv(temp,node,); % every entry of temp is a integer, do not forget scale in Tinv
       end
     end    
 end
