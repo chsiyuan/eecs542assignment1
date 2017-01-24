@@ -1,4 +1,4 @@
-function F=Initialize(I,node,seq,B,child)
+function F = Initialize(I,node,seq,B,child)
 %----------------------------------------------
 % Input:
 % I, the orginal image
@@ -12,3 +12,15 @@ function F=Initialize(I,node,seq,B,child)
 %
 % Output: initialization F, a 50*50*20*10 matrix [x,y,scale,theta]
 %---------------------------------------------------------------------------------------
+
+F = zeros(size(B{node}));
+for i = 1:size(child)
+    F = F + B{child(i)};
+end
+
+for L = {}
+    cost= match_energy_cost(L,node,seq);
+    F(L) = F(L) + cost;
+end
+
+end
