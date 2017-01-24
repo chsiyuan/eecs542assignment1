@@ -1,4 +1,4 @@
-function [B,w]=Twopass(F)
+function [B,W]=Twopass()
 %-------------------------------
 % Input:
 % F, a 50*50*20*10 matrix with initialized number
@@ -6,7 +6,7 @@ function [B,w]=Twopass(F)
 % Output:
 % B, a 50*50*20*10 matrix, the minimized generalized distance value 
 % at each location of its parent
-% w, a 50*50*20*10 matrix, the best location of wj given wi. 
+% W, a 50*50*20*10 matrix, the best location of wj given wi. 
 %
 % Attention: 
 % each entry of w is a number instead of a vector of
@@ -14,3 +14,60 @@ function [B,w]=Twopass(F)
 % Every time you get a vector, please use the function
 % trans2 to get a number.
 %-------------------------------
+F = zeros(50,50,20,10);
+weight_vec = [1,1,1,1]; % TBD
+l_scope = [1,   1,   log(0.5),   0;
+           405, 720, log(2), 2*pi];
+w_scope = [l_scope(1,:)./weight_vec ; l_scope(2,:)./weight_vec];
+[m,n,p,q] = size(F);
+k_vec = (w_scope(2,:)-w_scope(1,:))./[m,n,p,q];
+B = F;
+W = zeros(m,n,p,q);
+
+for x = 1:m
+    for y = 1:n
+        for s = 1:p
+            for t = 1:q
+                current = trans2([x,y,s,t],m,n,p,q);
+                pre(1) = trans2([max(x-1,1),y,s,t],m,n,p,q);
+                pre(2) = trans2([x,max(y-1,1),s,t],m,n,p,q);
+                pre(3) = trans2([x,y,max(s-1,1),t],m,n,p,q);
+                if t == 1
+                    pre(4) = trans2([x,y,s,q],m,n,p,q);
+                else
+                    pre(4) = trans2([x,y,s,t-1],m,n,p,q);
+                end
+                [B(current), min_idx] = min( [B(current), B(pre)] + [0,k_vec] );
+                if(min_idx == 1)
+                    W(current) = current;
+                else
+                    W(current) = pre(min_idx-1);
+                end
+            end
+        end
+    end
+end
+
+for x = 1:m
+    for y = 1:n
+        for s = 1:p
+            for t = 1:q
+                current = trans2([x,y,s,t],m,n,p,q);
+                pre(1) = trans2([min(x+1,m),y,s,t],m,n,p,q);
+                pre(2) = trans2([x,min(y+1,n),s,t],m,n,p,q);
+                pre(3) = trans2([x,y,min(s+1,p),t],m,n,p,q);
+                if t == q
+                    pre(4) = trans2([x,y,s,1],m,n,p,q);
+                else
+                    pre(4) = trans2([x,y,s,t+1],m,n,p,q);
+                end
+                [B(current), min_idx] = min( [B(current), B(pre)] + [0,k_vec] );
+                if(min_idx == 1)
+                    W(current) = current;
+                else
+                    W(current) = pre(min_idx-1);
+                end
+            end
+        end
+    end
+end
