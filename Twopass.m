@@ -1,12 +1,14 @@
-function [B,W]=Twopass()
+function [B_l,W_l]=Twopass(F,i,j)
 %-------------------------------
 % Input:
 % F, a 50*50*20*10 matrix with initialized number
+% i, parent node
+% j, child node
 %
 % Output:
-% B, a 50*50*20*10 matrix, the minimized generalized distance value 
-% at each location of its parent
-% W, a 50*50*20*10 matrix, the best location of wj given wi. 
+% B_l, a 50*50*20*10 matrix, the minimized generalized distance value 
+% at each location li of its parent i
+% W, a 50*50*20*10 matrix, the best location of lj given li. 
 %
 % Attention: 
 % each entry of w is a number instead of a vector of
@@ -14,7 +16,7 @@ function [B,W]=Twopass()
 % Every time you get a vector, please use the function
 % trans2 to get a number.
 %-------------------------------
-F = zeros(50,50,20,10);
+
 weight_vec = [1,1,1,1]; % TBD
 l_scope = [1,   1,   log(0.5),   0;
            405, 720, log(2), 2*pi];
@@ -71,3 +73,25 @@ for x = 1:m
         end
     end
 end
+
+% Bj(wi) --> Bj(li)
+% Wj(wi) --> Wj(li)
+B_l = zeros(m,n,p,q);
+W_l = zeros(m,n,p,q);
+for x = 1:m
+    for y = 1:n
+        for s = 1:p
+            for t = 1:q
+                li = trans2([x,t,s,t]);
+                wi = trans(T(li,i,j));   % wi = Tij(li)  do I need to do the interplation here?
+                if wi == -1
+                    B_l(li) = inf;  % TBD
+                    W_l(li) = nan;
+                else
+                    B_l(li) = B(wi);
+                    W_l(li) = W(wi);
+                end
+            end
+        end
+    end
+end            
