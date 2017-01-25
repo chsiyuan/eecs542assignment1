@@ -8,7 +8,7 @@ function [B_l,W_l]=Twopass(F,i,j)
 % Output:
 % B_l, a 50*50*20*10 matrix, the minimized generalized distance value 
 % at each location li of its parent i
-% W, a 50*50*20*10 matrix, the best location of lj given li. 
+% W_l, a 50*50*20*10 matrix, the best location of lj given li. 
 %
 % Attention: 
 % each entry of w is a number instead of a vector of
