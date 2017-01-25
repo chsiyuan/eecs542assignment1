@@ -1,4 +1,5 @@
 function temp=trans(k,m,n,p,q)
+% number->vector
 k=k-1;
 temp=zeros(1,4);
 temp(4)=floor(k/(m*n*p))+1;
