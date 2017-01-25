@@ -1,4 +1,5 @@
 function [B_l,W_l]=Twopass(F,i,j)
+
 %-------------------------------
 % Input:
 % F, a 50*50*20*10 matrix with initialized number
@@ -6,9 +7,12 @@ function [B_l,W_l]=Twopass(F,i,j)
 % j, child node
 %
 % Output:
-% B_l, a 50*50*20*10 matrix, the minimized generalized distance value 
-% at each location li of its parent i
-% W, a 50*50*20*10 matrix, the best location of lj given li. 
+%
+% B, a 50*50*20*10 matrix, the minimized generalized distance value 
+% at each location of its parent
+% w, a 50*50*20*10 matrix, the best location of wj given wi.
+% i, the index of the current node
+% j, the index of the parent of the current node
 %
 % Attention: 
 % each entry of w is a number instead of a vector of
