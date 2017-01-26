@@ -67,33 +67,26 @@ wy = [0,1,1,0,0,1;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
-ws = [0,1,1,0,0,1;
-      1,0,0,1,0,0;
-      1,0,0,0,1,0;
-      0,1,0,0,0,0;
-      0,0,1,0,0,0;
-      1,0,0,0,0,0];
 wt = [0,1,1,0,0,1;
       1,0,0,1,0,0;
       1,0,0,0,1,0;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
-  
-% Range of w grid
-global wrange;
-wrange = [lrange(:,1:3) log(lrange(:,4))] .* weight;
-
-% Scale of w grid
-global wgrid; 
-wgrid = (wrange(1,:)-wrange(2,:)) ./ (bnum-1);
+ws = [0,1,1,0,0,1;
+      1,0,0,1,0,0;
+      1,0,0,0,1,0;
+      0,1,0,0,0,0;
+      0,0,1,0,0,0;
+      1,0,0,0,0,0];
 
 % Ideal parameters
-global ideallen; ideallen=[80, 40, 40, 40, 40, 45];
+global ideallen; ideallen=[80, 47.5, 47.5, 32.5, 32.5, 30];
 global x_ij; load('x_ij.mat');
 global y_ij; load('y_ij.mat');
-global s_ij; load('s_ij.mat');
 global t_ij; load('theta_ij.mat');
+global s_ij; load('s_ij.mat');
+
 
 
 
@@ -125,6 +118,7 @@ for d = 1:dmax
         w_opt = w_opt_table{node}(l_opt_number{pnode});
         w_temp = trans(w_opt,bnum);
         l_temp = Tinv(w_temp,node,pnode);
+        assert(~isnan(l_tem),'You fail!!! HA HA HA');
         l_opt_number{node} = trans2(l_temp,bnum);
     end
 end

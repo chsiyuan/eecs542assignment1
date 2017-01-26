@@ -40,8 +40,12 @@ else
                 for s = 1:bnum(4)
                     l = Tinv([x,y,theta,s],node,pnode);  % lj = T'_ji(wj), l is a vector
                     % lreal<-l
-                    lreal = (l - ones(1,4)) .* lgrid + lrange(1,:);
-                    F(x,y,theta,s) = Bc(trans2(l)) + match_enery_cost(lreal,node,seq);
+                    if isnan(l)
+                        F(x,y,theta,s) = nan;
+                    else
+                        lreal = (l - ones(1,4)) .* lgrid + lrange(1,:);
+                        F(x,y,theta,s) = Bc(trans2(l)) + match_enery_cost(lreal,node,seq);
+                    end
                 end
             end
         end
