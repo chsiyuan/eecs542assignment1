@@ -22,12 +22,11 @@ R = [cos(theta), -sin(theta);
 W = [wx(i,j), 0;
      0,wy(i,j)];
 xytip = W * ([x, y]' + s * R * [x_ij(i,j), y_ij(i,j)]');
-xytip = xytip';
 wreal = [xytip' thetatip stip];
 
 weight = [wx(i,j), wy(i,j), wt(i,j), ws(i,j)];
 wrange = [lrange(:,1:3) log(lrange(:,4))] .* ([1,1]'*weight);
-wgrid = (wrange(1,:)-wrange(2,:)) ./ (bnum-1);
+wgrid = (wrange(2,:)-wrange(1,:)) ./ (bnum-1);
 w = (wreal - wrange(1,:)) ./ wgrid + ones(1,4);  % wreal = (wgrid-(1,1,1,1)).*wgrid + wrange(1,:)
 w = round(w);
 if (w(1:2) >= ones(1,2)) & (w(1:2) <= bnum(1:2))  % If w is out of the range, set it to nan.

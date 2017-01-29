@@ -18,7 +18,11 @@ function [B_l,W_l]=Twopass(F,i,j)
 % Every time you get a vector, please use the function
 % trans2 to get a number.
 %-------------------------------
-global wgrid bnum;
+global lrange bnum wx wy ws wt;
+
+weight = [wx(i,j), wy(i,j), wt(i,j), ws(i,j)];
+wrange = [lrange(:,1:3) log(lrange(:,4))] .* ([1,1]'*weight);
+wgrid = (wrange(2,:)-wrange(1,:)) ./ (bnum-1);
 
 B_w = F;
 W_w = zeros(bnum);
@@ -27,6 +31,9 @@ for x = 1:bnum(1)
     for y = 1:bnum(2)
         for t = 1:bnum(3)
             for s = 1:bnum(4)
+                if isnan(B_w(x,y,t,s))
+                        continue;
+                end
                 if(t == 1)
                     [B_w(x,y,t,s), min_idx] = min( [B_w(x,y,t,s),...
                                                 B_w(max(x-1,1),y,t,s),...
@@ -52,45 +59,46 @@ for x = 1:bnum(1)
                                 x,y,max(t-1,1),s; 
                                 x,y,t,max(s-1,1)];
                 end
-                W_w(x,y,t,s) = trans2(idx_list(min_idx),bnum);
+                W_w(x,y,t,s) = trans2(idx_list(min_idx,:));
             end
         end
     end
 end
 
-for x = 1:bnum(1)
-    for y = 1:bnum(2)
-        for t = 1:bnum(3)
-            for s = 1:bnum(4)
-                if t == bnum(3)
-                    if isnan(B_w(x,y,t,s))
+for x = bnum(1):-1:1
+    x
+    for y = bnum(2):-1:1
+        for t = bnum(3):-1:1
+            for s = bnum(4):-1:1
+                if isnan(B_w(x,y,t,s))
                         continue;
-                    end
+                end
+                if t == bnum(3)
                     [B_w(x,y,t,s), min_idx] = min( [B_w(x,y,t,s),...
                                                     B_w(min(x+1,bnum(1)),y,t,s),...
                                                     B_w(x,min(y+1,bnum(2)),t,s),...
                                                     B_w(x,y,1,s),...
-                                                    B_w(x,y,t,min(s+1,bnum(3)))]...
+                                                    B_w(x,y,t,min(s+1,bnum(4)))]...
                                                 + [0,wgrid] );
                      idx_list = [x,y,t,s;
                                  min(x+1,bnum(1)),y,t,s;
                                  x,min(y+1,bnum(2)),t,s;
                                  x,y,1,s;
-                                 x,y,t,min(s+1,bnum(3))];
+                                 x,y,t,min(s+1,bnum(4))];
                 else
                     [B_w(x,y,t,s), min_idx] = min( [B_w(x,y,t,s),...
                                                     B_w(min(x+1,bnum(1)),y,t,s),...
                                                     B_w(x,min(y+1,bnum(2)),t,s),...
                                                     B_w(x,y,min(t+1,bnum(3)),s),...
-                                                    B_w(x,y,t,min(s+1,bnum(3)))]...
+                                                    B_w(x,y,t,min(s+1,bnum(4)))]...
                                                 + [0,wgrid] );
                      idx_list = [x,y,t,s;
                                  min(x+1,bnum(1)),y,t,s;
                                  x,min(y+1,bnum(2)),t,s;
                                  x,y,min(t+1,bnum(3)),s;
-                                 x,y,t,min(s+1,bnum(3))];
+                                 x,y,t,min(s+1,bnum(4))];
                 end
-                W_w(x,y,t,s) = trans2(idx_list(min_idx),bnum);
+                W_w(x,y,t,s) = trans2(idx_list(min_idx,:));
             end
         end
     end
@@ -104,7 +112,7 @@ for x = 1:bnum(1)
     for y = 1:bnum(2)
         for t = 1:bnum(3)
             for s = 1:bnum(4)
-                wi = trans2(T([x,y,t,s],i,j),bnum);   % wi = Tij(li)
+                wi = trans2(T([x,y,t,s],i,j));   % wi = Tij(li)
                 if isnan(wi)
                     B_l(x,y,t,s) = nan;  % TBD
                     W_l(x,y,t,s) = nan;

@@ -1,10 +1,9 @@
-function cost= match_energy_cost(L,part,seq)
+function cost= match_energy_cost(lF,L,part,seq)
 % L --> [x, y, theta, scale]  end points of the query stick  
 % part is the query part, 1=torso, 2=left upper arm, 3=right upper arm, 4=left lower arm, 5=right lower arm, 6= head
 % seq is the sequence of the image in the folder
 % using the model lengths as per the presentation
-model_len=[160, 95,95,65,65,60];
-lF = ReadStickmenAnnotationTxt('../data/buffy_s5e2_sticks.txt');
+
 dat_pt=lF(seq).stickmen.coor(:,part);
 if part>1 & part <6
     val1=calc_val(dat_pt,L,2);
@@ -30,7 +29,7 @@ if part==1 | part ==6
     end
 end
 dat_scale=sqrt(sum([dat_pt(1)-dat_pt(3),dat_pt(2)-dat_pt(4)].^2))/model_len(part);
-dat_val=[dat_x, dat_y, dat_theta, dat_scale]
+dat_val=[dat_x, dat_y, dat_theta, dat_scale];
 diff=(dat_val-L).*[0.5 0.5 100 100];
 cost=sum(diff.^2);
 end
