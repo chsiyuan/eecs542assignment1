@@ -1,4 +1,5 @@
-function k=trans2(temp,m,n,p,q)
+
+function k=trans2(temp,bnum)
 % vector to number
-    k=1+(temp-1)*[1,m,m*n,m*n*p]';
-end
+m = bnum(1); n = bnum(2); p = bnum(3); q = bnum(4);
+k = 1+(temp-1)*[1,m,m*n,m*n*p]';
