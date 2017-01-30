@@ -10,10 +10,11 @@ I = imread('000063.jpg'); seq=1;
 % 5=right lower arm, 6= head
 tree = zeros(6,6); 
 tree(1,2) = 1; tree(1,3) = 1; tree(1,6) = 1;
-tree(2,4) = 1; tree(3,5) = 1;
+%tree(2,4) = 1; tree(3,5) = 1;
 
 % the depth of each node
-depth = [0,1,1,2,2,1];
+% depth = [0,1,1,2,2,1];
+depth = [0,1,1,-1,-1,1];
 dmax = max(depth);
 
 % each element of F is a 50*50*20*10 matrix based on the wj gird. F is the output of
@@ -51,7 +52,7 @@ lrange = [1,         1,         0,    0.5;
       
 % Scale of l grid
 global lgrid; 
-lgrid = (lrange(2,:)-lrange(1,:)) ./ (bnum-1);   % n buckets <==> n-1 intervals
+lgrid = (lrange(2,:)-lrange(1,:)) ./ (bnum-1);
 
 % Weight of x,y,s,theta
 global wx wy ws wt;
@@ -61,12 +62,14 @@ wx = [0,1,1,0,0,1;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
+wx = wx*5;
 wy = [0,1,1,0,0,1;
       1,0,0,1,0,0;
       1,0,0,0,1,0;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
+wy = wy*5;
 wt = [0,0.1,0.1,0,0,0.1;
       0.1,0,0,0.1,0,0;
       0.1,0,0,0,0.1,0;
@@ -96,6 +99,7 @@ for d = dmax:-1:0
     node_d = find(depth==d);
     for idx = 1:length(node_d)
       node = node_d(idx);
+      node
       child = find(tree(node,:)~=0);
       pnode = find(tree(:,node)~=0);
       F{node} = Initialize(node,seq,B,child,pnode);
@@ -109,7 +113,7 @@ for d = dmax:-1:0
     end    
 end
 
-root->leaf
+% root->leaf
 for d = 1:dmax
     node_d = find(depth==d);
     for idx = 1:length(node_d)

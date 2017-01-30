@@ -24,8 +24,8 @@ weight = [wx(i,j), wy(i,j), wt(i,j), ws(i,j)];
 wrange = [lrange(:,1:3) log(lrange(:,4))] .* ([1,1]'*weight);
 wgrid = (wrange(2,:)-wrange(1,:)) ./ (bnum-1);
 
+load('W_w.mat');
 B_w = F;
-W_w = zeros(bnum);
 
 for x = 1:bnum(1)
     for y = 1:bnum(2)
@@ -59,14 +59,13 @@ for x = 1:bnum(1)
                                 x,y,max(t-1,1),s; 
                                 x,y,t,max(s-1,1)];
                 end
-                W_w(x,y,t,s) = trans2(idx_list(min_idx,:));
+                W_w(x,y,t,s) = W_w(trans2(idx_list(min_idx,:)));
             end
         end
     end
 end
 
 for x = bnum(1):-1:1
-    x
     for y = bnum(2):-1:1
         for t = bnum(3):-1:1
             for s = bnum(4):-1:1
@@ -98,7 +97,7 @@ for x = bnum(1):-1:1
                                  x,y,min(t+1,bnum(3)),s;
                                  x,y,t,min(s+1,bnum(4))];
                 end
-                W_w(x,y,t,s) = trans2(idx_list(min_idx,:));
+                W_w(x,y,t,s) = W_w(trans2(idx_list(min_idx,:)));
             end
         end
     end
