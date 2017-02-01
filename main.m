@@ -1,5 +1,5 @@
-startup;
-installmex;
+%startup;
+%installmex;
 
 I = imread('000063.jpg'); seq=1;
 
@@ -14,6 +14,7 @@ tree(2,4) = 1; tree(3,5) = 1;
 
 % the depth of each node
 depth = [0,1,1,2,2,1];
+%depth = [0,1,1,-1,-1,1];
 dmax = max(depth);
 
 % each element of F is a 50*50*20*10 matrix based on the wj gird. F is the output of
@@ -24,6 +25,7 @@ F = cell([1,6]);
 % each element of B is a 50*50*20*10 matrix based on the li grid. B is the minimized value of
 % cost function at each location li of the parent node. (leaf->root)
 B = cell([1,6]);
+
 % each element of w_opt_table is a 50*50*20*10 matrix based on the li grid. It is the location of
 % wj at each location li of the parent node.(leaf->root).
 % pay attention here, the location is not a vector, but a number.
@@ -50,7 +52,7 @@ lrange = [1,         1,         0,    0.5;
       
 % Scale of l grid
 global lgrid; 
-lgrid = (lrange(2,:)-lrange(1,:)) ./ (bnum-1);   % n buckets <==> n-1 intervals
+lgrid = (lrange(2,:)-lrange(1,:)) ./ (bnum-1);
 
 % Weight of x,y,s,theta
 global wx wy ws wt;
@@ -60,12 +62,14 @@ wx = [0,1,1,0,0,1;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
+wx = wx*10;
 wy = [0,1,1,0,0,1;
       1,0,0,1,0,0;
       1,0,0,0,1,0;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
+wy = wy*10;
 wt = [0,1,1,0,0,1;
       1,0,0,1,0,0;
       1,0,0,0,1,0;
@@ -78,12 +82,13 @@ ws = [0,1,1,0,0,1;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
+ws = ws*20;  
 
 % Ideal parameters
 global ideallen; ideallen=[80, 47.5, 47.5, 32.5, 32.5, 30];
 global x_ij; load('x_ij.mat');
 global y_ij; load('y_ij.mat');
-global t_ij; load('theta_ij.mat');
+global t_ij; load('t_ij.mat');
 global s_ij; load('s_ij.mat');
 
 
@@ -95,11 +100,12 @@ for d = dmax:-1:0
     node_d = find(depth==d);
     for idx = 1:length(node_d)
       node = node_d(idx);
+      node
       child = find(tree(node,:)~=0);
       pnode = find(tree(:,node)~=0);
       F{node} = Initialize(node,seq,B,child,pnode);
       if d ~=0
-        [B{node},w_opt_table{node}] = Twopass(F{node},node,pnode);
+        [B{node},w_opt_table{node}] = Twopass(F{node},pnode,node);
       else
           a = min(min(min(min(F{node}))));
           k = find(F{node}==a);
@@ -115,22 +121,16 @@ for d = 1:dmax
         node = node_d(idx);
         pnode = find(tree(:,node)~=0);
         w_opt = w_opt_table{node}(l_opt_number{pnode});
-        w_temp = trans(w_opt,bnum);
+        w_temp = trans(w_opt);
         l_temp = Tinv(w_temp,node,pnode);
-        assert(~isnan(l_tem),'You fail!!! HA HA HA');
-        l_opt_number{node} = trans2(l_temp,bnum);
+        assert(~sum(isnan(l_temp)),'You fail!!! HA HA HA');
+        l_opt_number{node} = trans2(l_temp);
     end
 end
 
 %% Visualization
-figure;
-imshow(I); hold on;
-
-for i = 1:6
-    l = (trans(l_opt_number(node)) - ones(1,4)) .* lgrid + lrange(1,:);
-    x1til = l(1) + ideallen(i)*l(4)*cos(l(3));
-    y1til = l(2) + ideallen(i)*l(4)*sin(l(3));
-    x2til = l(1) - ideallen(i)*l(4)*cos(l(3));
-    y2til = l(2) - ideallen(i)*l(4)*sin(l(3));
-    line([y1til,x1til],[y2til,x2til]); hold on;
+imshow(I);
+hold on
+for part=1:6
+    Visualize(trans(l_opt_number{part}),part)
 end

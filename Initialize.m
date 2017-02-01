@@ -15,6 +15,9 @@ function F = Initialize(node,seq,B,child,pnode)
 %---------------------------------------------------------------------------------------
 global lgrid lrange bnum;
 
+load('M.mat');
+
+% lF = ReadStickmenAnnotationTxt('buffy_s5e2_sticks.txt');
 Bc = zeros(bnum);
 childnum = length(child);
 for idx=1:childnum
@@ -23,16 +26,17 @@ end
 
 F = zeros(bnum);
 if isempty(pnode)
-    for x = 1:bnum(1)
-        for y = 1:bnum(2)
-            for theta = 1:bnum(3)
-                for s = 1:bnum(4)
-                    lreal = ([x,y,theta,s] - ones(1,4)) .* lgrid + lrange(1,:);
-                    F(x,y,theta,s) = Bc(x,y,theta,s) + match_enery_cost(lreal,node,seq);
-                end
-            end
-        end
-    end
+%     for x = 1:bnum(1)
+%         for y = 1:bnum(2)
+%             for theta = 1:bnum(3)
+%                 for s = 1:bnum(4)
+%                     lreal = ([x,y,theta,s] - ones(1,4)) .* lgrid + lrange(1,:);
+%                     F(x,y,theta,s) = Bc(x,y,theta,s) + match_energy_cost(lF,lreal,node,seq);
+%                 end
+%             end
+%         end
+%     end
+    F = Bc + M{node};
 else
     for x = 1:bnum(1)
         for y = 1:bnum(2)
@@ -43,8 +47,9 @@ else
                     if isnan(l)
                         F(x,y,theta,s) = nan;
                     else
-                        lreal = (l - ones(1,4)) .* lgrid + lrange(1,:);
-                        F(x,y,theta,s) = Bc(trans2(l)) + match_enery_cost(lreal,node,seq);
+%                         lreal = (l - ones(1,4)) .* lgrid + lrange(1,:);
+%                         F(x,y,theta,s) = Bc(trans2(l)) + match_energy_cost(lF,lreal,node,seq);
+                        F(x,y,theta,s) = Bc(trans2(l)) + M{node}(x,y,theta,s);
                     end
                 end
             end

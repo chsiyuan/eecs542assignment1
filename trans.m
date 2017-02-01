@@ -1,6 +1,7 @@
-
-function temp=trans(k,bnum)
+function temp=trans(k)
 % number->vector
+global bnum;
+
 k=k-1;
 m = bnum(1); n = bnum(2); p = bnum(3); q = bnum(4);
 temp=zeros(1,4);
