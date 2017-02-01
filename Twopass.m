@@ -22,7 +22,8 @@ global lrange bnum wx wy ws wt;
 
 weight = [wx(i,j), wy(i,j), wt(i,j), ws(i,j)];
 wrange = [lrange(:,1:3) log(lrange(:,4))] .* ([1,1]'*weight);
-wgrid = (wrange(2,:)-wrange(1,:)) ./ (bnum-1);
+%wgrid = (wrange(2,:)-wrange(1,:)) ./ (bnum-1);
+wgrid = [0,0,0,0];
 
 load('W_w.mat');
 B_w = F;

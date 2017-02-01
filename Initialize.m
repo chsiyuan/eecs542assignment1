@@ -15,7 +15,7 @@ function F = Initialize(node,seq,B,child,pnode)
 %---------------------------------------------------------------------------------------
 global lgrid lrange bnum;
 
-load('M.mat');
+load('M_6.mat');
 
 % lF = ReadStickmenAnnotationTxt('buffy_s5e2_sticks.txt');
 Bc = zeros(bnum);
@@ -49,7 +49,7 @@ else
                     else
 %                         lreal = (l - ones(1,4)) .* lgrid + lrange(1,:);
 %                         F(x,y,theta,s) = Bc(trans2(l)) + match_energy_cost(lF,lreal,node,seq);
-                        F(x,y,theta,s) = Bc(trans2(l)) + M{node}(trans2(l));
+                        F(x,y,theta,s) = Bc(trans2(l)) + M{node}(x,y,theta,s);
                     end
                 end
             end

@@ -1,7 +1,10 @@
-%startup;
-%installmex;
+startup;
+installmex;
 
-I = imread('000063.jpg'); seq=1;
+clear all
+tic 
+
+I = imread('000840.jpg'); seq=6;
 
 %% Definition
 % if node i is the parent of node j,tree(i,j)=1, and otherwise,
@@ -10,11 +13,10 @@ I = imread('000063.jpg'); seq=1;
 % 5=right lower arm, 6= head
 tree = zeros(6,6); 
 tree(1,2) = 1; tree(1,3) = 1; tree(1,6) = 1;
-%tree(2,4) = 1; tree(3,5) = 1;
+tree(2,4) = 1; tree(3,5) = 1;
 
 % the depth of each node
-% depth = [0,1,1,2,2,1];
-depth = [0,1,1,-1,-1,1];
+depth = [0,1,1,2,2,1];
 dmax = max(depth);
 
 % each element of F is a 50*50*20*10 matrix based on the wj gird. F is the output of
@@ -70,18 +72,19 @@ wy = [0,1,1,0,0,1;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
 wy = wy*5;
-wt = [0,0.1,0.1,0,0,0.1;
-      0.1,0,0,0.1,0,0;
-      0.1,0,0,0,0.1,0;
-      0,0.1,0,0,0,0;
-      0,0,0.1,0,0,0;
-      0.1,0,0,0,0,0];
+wt = [0,1,1,0,0,1;
+      1,0,0,1,0,0;
+      1,0,0,0,1,0;
+      0,1,0,0,0,0;
+      0,0,1,0,0,0;
+      1,0,0,0,0,0];
 ws = [0,1,1,0,0,1;
       1,0,0,1,0,0;
       1,0,0,0,1,0;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
+ws = ws*20;
 
 % Ideal parameters
 global ideallen; ideallen=[80, 47.5, 47.5, 32.5, 32.5, 30];
@@ -102,12 +105,13 @@ for d = dmax:-1:0
       node
       child = find(tree(node,:)~=0);
       pnode = find(tree(:,node)~=0);
-      F{node} = Initialize(node,seq,B,child,pnode);
+      F{node} = Initialize(node,seq,B,child,pnode);  % If node = torso, F(l); otherwiese, F(w)
       if d ~=0
-        [B{node},w_opt_table{node}] = Twopass(F{node},node,pnode);
+        [B{node},w_opt_table{node}] = Twopass(F{node},pnode,node);
       else
           a = min(min(min(min(F{node}))));
           k = find(F{node}==a);
+          k = k(1);
           l_opt_number{node} = k;
       end
     end    
@@ -127,14 +131,10 @@ for d = 1:dmax
     end
 end
 
+toc
 %% Visualization
 figure;
 imshow(I); hold on;
 for i = 1:6
-    l = (trans(l_opt_number{node}) - ones(1,4)) .* lgrid + lrange(1,:);
-    x1til = l(1) + ideallen(i)*l(4)*cos(l(3));
-    y1til = l(2) + ideallen(i)*l(4)*sin(l(3));
-    x2til = l(1) - ideallen(i)*l(4)*cos(l(3));
-    y2til = l(2) - ideallen(i)*l(4)*sin(l(3));
-    line([y1til,x1til],[y2til,x2til]); hold on;
+    Visualize(trans(l_opt_number{i}),i);
 end
