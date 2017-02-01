@@ -1,7 +1,7 @@
 global bnum lgrid lrange 
 lF = ReadStickmenAnnotationTxt('buffy_s5e2_sticks.txt');
 M=cell([1,6]);
-seq = 6;
+seq = 1;
 tree = zeros(6,6); 
 tree(1,2) = 1; tree(1,3) = 1; tree(1,6) = 1;
 tree(2,4) = 1; tree(3,5) = 1;

@@ -15,7 +15,7 @@ function F = Initialize(node,seq,B,child,pnode)
 %---------------------------------------------------------------------------------------
 global lgrid lrange bnum;
 
-load('M_6.mat');
+load('M.mat');
 
 % lF = ReadStickmenAnnotationTxt('buffy_s5e2_sticks.txt');
 Bc = zeros(bnum);

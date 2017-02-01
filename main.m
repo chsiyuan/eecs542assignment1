@@ -4,7 +4,7 @@ installmex;
 clear all
 tic 
 
-I = imread('000840.jpg'); seq=6;
+I = imread('000063.jpg'); seq=1;
 
 %% Definition
 % if node i is the parent of node j,tree(i,j)=1, and otherwise,
