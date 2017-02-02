@@ -1,0 +1,12 @@
+l1a=[39,15,20,2];
+w1a=T(l1a,1,2);
+l2a=Tinv(w1a,2,1);
+l1b=[39,15,10,2];
+w1b=T(l1b,1,2);
+l2b=Tinv(w1b,2,1);
+load('M.mat');
+load('B.mat');
+b2a=B{2}(trans2(l1a));
+b2b=B{2}(trans2(l1b));
+m2a=M{2}(trans2(l2a));
+m2b=M{2}(trans2(l2b));
