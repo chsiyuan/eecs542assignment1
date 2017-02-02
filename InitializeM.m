@@ -1,7 +1,9 @@
+tic
+
 global bnum lgrid lrange 
 lF = ReadStickmenAnnotationTxt('buffy_s5e2_sticks.txt');
 M=cell([1,6]);
-seq = 1;
+seq = 73;
 tree = zeros(6,6); 
 tree(1,2) = 1; tree(1,3) = 1; tree(1,6) = 1;
 tree(2,4) = 1; tree(3,5) = 1;
@@ -42,6 +44,8 @@ for x = 1:bnum(1)
 end
 M{1} = F;
 
+toc
+
 function lmatch = coor_fix(lreal)
 lmatch = zeros(1,4);
 lmatch(1) = lreal(2);
@@ -55,4 +59,3 @@ else
 end
 lmatch(4) = lreal(4);
 end
-    

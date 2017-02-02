@@ -4,7 +4,7 @@
 clear all
 tic 
 
-I = imread('000063.jpg'); seq=1;
+I = imread('058835.jpg'); seq=73;
 
 %% Definition
 % if node i is the parent of node j,tree(i,j)=1, and otherwise,
@@ -64,14 +64,14 @@ wx = [0,1,1,0,0,1;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
-wx = wx*3;
+wx = wx*5;
 wy = [0,1,1,0,0,1;
       1,0,0,1,0,0;
       1,0,0,0,1,0;
       0,1,0,0,0,0;
       0,0,1,0,0,0;
       1,0,0,0,0,0];
-wy = wy*3;
+wy = wy*5;
 wt = [0,1,1,0,0,1;
       1,0,0,1,0,0;
       1,0,0,0,1,0;
