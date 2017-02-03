@@ -31,7 +31,7 @@ if isempty(pnode)
             for theta = 1:bnum(3)
                 for s = 1:bnum(4)
                     lreal = ([x,y,theta,s] - ones(1,4)) .* lgrid + lrange(1,:);
-                    lmatch = coor_fix(lreal)
+                    lmatch = coor_fix(lreal);
                     F(x,y,theta,s) = Bc(x,y,theta,s) + match_energy_cost(lF,lmatch,node,seq);
                 end
             end
