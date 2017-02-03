@@ -15,7 +15,7 @@ function F = Initialize(node,seq,B,child,pnode)
 %---------------------------------------------------------------------------------------
 global lgrid lrange bnum;
 
-load('M.mat');
+lF = ReadStickmenAnnotationTxt('buffy_s5e2_sticks.txt');
 
 % lF = ReadStickmenAnnotationTxt('buffy_s5e2_sticks.txt');
 Bc = zeros(bnum);
@@ -26,17 +26,17 @@ end
 
 F = zeros(bnum);
 if isempty(pnode)
-%     for x = 1:bnum(1)
-%         for y = 1:bnum(2)
-%             for theta = 1:bnum(3)
-%                 for s = 1:bnum(4)
-%                     lreal = ([x,y,theta,s] - ones(1,4)) .* lgrid + lrange(1,:);
-%                     F(x,y,theta,s) = Bc(x,y,theta,s) + match_energy_cost(lF,lreal,node,seq);
-%                 end
-%             end
-%         end
-%     end
-    F = Bc + M{node};
+    for x = 1:bnum(1)
+        for y = 1:bnum(2)
+            for theta = 1:bnum(3)
+                for s = 1:bnum(4)
+                    lreal = ([x,y,theta,s] - ones(1,4)) .* lgrid + lrange(1,:);
+                    lmatch = coor_fix(lreal)
+                    F(x,y,theta,s) = Bc(x,y,theta,s) + match_energy_cost(lF,lmatch,node,seq);
+                end
+            end
+        end
+    end
 else
     for x = 1:bnum(1)
         for y = 1:bnum(2)
@@ -47,12 +47,28 @@ else
                     if isnan(l)
                         F(x,y,theta,s) = nan;
                     else
-%                         lreal = (l - ones(1,4)) .* lgrid + lrange(1,:);
-%                         F(x,y,theta,s) = Bc(trans2(l)) + match_energy_cost(lF,lreal,node,seq);
-                        F(x,y,theta,s) = Bc(trans2(l)) + M{node}(x,y,theta,s);
+                         lreal = (l - ones(1,4)) .* lgrid + lrange(1,:);
+                         lmatch = coor_fix(lreal);
+                         F(x,y,theta,s) = Bc(trans2(l)) + match_energy_cost(lF,lmatch,node,seq);
+%                         F(x,y,theta,s) = Bc(trans2(l)) + M{node}(x,y,theta,s);
                     end
                 end
             end
         end
     end
+end
+end
+
+function lmatch = coor_fix(lreal)
+lmatch = zeros(1,4);
+lmatch(1) = lreal(2);
+lmatch(2) = lreal(1);
+if lreal(3) <= pi/2
+    lmatch(3) = -lreal(3);
+elseif lreal(3) >= 3*pi/2
+    lmatch(3) = -lreal(3) + 2*pi;
+else
+    lmatch(3) = -lreal(3) + pi;
+end
+lmatch(4) = lreal(4);
 end

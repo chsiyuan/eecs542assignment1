@@ -12,9 +12,11 @@ R = [cos(theta), -sin(theta);
 if i > 1 && i < 6 
     xy1 = [x, y]' + scale * R * [0,ideallen(i)]';
     xy2 = [x, y]' + scale * R * [0,-ideallen(i)]';
+    text(xy1(2),xy1(1),'up','Color','red');
 else
     xy1 = [x, y]' + scale * R * [ideallen(i),0]';
     xy2 = [x, y]' + scale * R * [-ideallen(i),0]';
+    text(xy2(2),xy2(1),'up','Color','red');
 end
 X = [xy1(2),xy2(2)];
 Y = [xy1(1),xy2(1)];
